@@ -2,13 +2,13 @@
 include 'koneksi.php';
 
 $id = $_GET['id'];
-$sql = mysqli_query($koneksi, "SELECT * FROM tb_kategori WHERE id_kategori='$id'");
+$sql = mysqli_query($koneksi, "SELECT * FROM tb_ktg WHERE id_kategori='$id'");
 $data = mysqli_fetch_array($sql);
 
 if (isset($_POST['simpan'])) {
     $nm_kategori = $_POST['nm_kategori'];
 
-    $query = mysqli_query($koneksi, "UPDATE tb_kategori SET nm_kategori='$nm_kategori' WHERE id_kategori='$id'");
+    $query = mysqli_query($koneksi, "UPDATE tb_ktg SET nm_kategori='$nm_kategori' WHERE id_kategori='$id'");
     if ($query) {
         echo "<script>alert('Data Berhasil Diubah')</script>";
         header("refresh:0; kategori.php");
@@ -66,7 +66,7 @@ if (isset($_POST['simpan'])) {
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="">
         <span class="d-none d-lg-block">Feristyle</span>
       </a>
