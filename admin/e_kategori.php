@@ -2,13 +2,13 @@
 include 'koneksi.php';
 
 $id = $_GET['id'];
-$sql = mysqli_query($koneksi, "SELECT * FROM tb_ktg WHERE id_kategori='$id'");
+$sql = mysqli_query($koneksi, "SELECT * FROM tb_ktg WHERE id_ktg='$id'");
 $data = mysqli_fetch_array($sql);
 
 if (isset($_POST['simpan'])) {
-    $nm_kategori = $_POST['nm_kategori'];
+    $nm_kategori = $_POST['nm_ktg'];
 
-    $query = mysqli_query($koneksi, "UPDATE tb_ktg SET nm_kategori='$nm_kategori' WHERE id_kategori='$id'");
+    $query = mysqli_query($koneksi, "UPDATE tb_ktg SET nm_ktg='$nm_ktg' WHERE id_ktg='$id'");
     if ($query) {
         echo "<script>alert('Data Berhasil Diubah')</script>";
         header("refresh:0; kategori.php");
@@ -207,10 +207,10 @@ if (isset($_POST['simpan'])) {
             <div class="card-body">
               <form class="row g-3 mt-2" method="post">
                 <div class="col-12">
-                  <label for="nmkategori" class="form-label">Nama Kategori</label>
-                  <input type="text" class="form-control" id="nm_kategori"
-                  name="nm_kategori" placeholder="Masukkan Nama Kategori Produk"
-                  value="<?php echo isset($data['nm_kategori']) ? $data["nm_kategori"] : ''; ?>">
+                  <label for="nm_ktg" class="form-label">Nama Kategori</label>
+                  <input type="text" class="form-control" id="nm_ktg"
+                  name="nm_ktg" placeholder="Masukkan Nama Kategori Produk"
+                  value="<?php echo isset($data['nm_ktg']) ? $data["nm_ktg"] : ''; ?>">
           </div>
           <div class="text-center">
             <button type="reset" class="btn btn-secondary">Reset</button>

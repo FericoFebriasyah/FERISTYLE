@@ -214,12 +214,12 @@
                     ['query']) : '';
 
                     // Query dasar
-                    $sql_query = "SELECT id_kategori, nm_kategori FROM
+                    $sql_query = "SELECT id_ktg, nm_ktg FROM
                     tb_ktg";
 
                     // Jika ada pencarian, tambahkan kondisi WHERE
                     if (!empty($query)) {
-                      $sql_query .= " WHERE nm_kategori LIKE'%$query%'";
+                      $sql_query .= " WHERE nm_ktg LIKE'%$query%'";
                     }
 
                     $sql = mysqli_query($koneksi, $sql_query);
@@ -230,16 +230,16 @@
 
                         <tr>
                             <td><?php echo $no++; ?></td>
-                            <td><?php echo $hasil['nm_kategori']; ?>
+                            <td><?php echo $hasil['nm_ktg']; ?>
                       </td>
 
                           <a href="e_kategori.php?id=<?php
-                          echo $hasil['id_kategori']; ?>"
+                          echo $hasil['id_ktg']; ?>"
                           class="btn btn-warning">
                               <i class="bi bi-pencil-squere"></i>
                       </a>
                       <a href="h_kategori.php?id=<?php
-                      echo $hasil['id_kateegori']; ?>"
+                      echo $hasil['id_ktg']; ?>"
                       class="btn btn-danger"
                       onclick="return confrim
                       ('Apakah Anda Yakin Ingin Menghapus Data?')">
