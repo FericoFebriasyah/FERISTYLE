@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Produk - Feristyle Admin</title>
+    <title>Pengguna - Feristyle Admin</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -42,8 +42,10 @@
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
         </div><!-- End Logo -->
+
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
+
                 <li class="nav-item dropdown pe-3">
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
@@ -90,35 +92,35 @@
             </li><!-- End Kategori Produk Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link" href="produk.php">
-                    <i class="bi bi-bag"></i>
+                <a class="nav-link collapsed" href="produk.php">
+                    <i class="bi bi-shop"></i>
                     <span>Produk</span>
                 </a>
             </li><!-- End Produk Page Nav -->
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="keranjang.php">
-                    <i class="bi bi-basket"></i>
+                    <i class="bi bi-cart"></i>
                     <span>Keranjang</span>
                 </a>
             </li><!-- End Keranjang Page Nav -->
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="transaksi.php">
-                    <i class="bi bi-currency-dollar"></i>
+                    <i class="bi bi-receipt"></i>
                     <span>Transaksi</span>
                 </a>
             </li><!-- End Transaksi Page Nav -->
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="laporan.php">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <i class="bi bi-file-earmark-bar-graph"></i>
                     <span>Laporan</span>
                 </a>
             </li><!-- End Laporan Page Nav -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="pengguna.php">
-                    <i class="bi bi-file-person"></i>
+                <a class="nav-link" href="pengguna.php">
+                    <i class="bi bi-people"></i>
                     <span>Pengguna</span>
                 </a>
             </li><!-- End Pengguna Page Nav -->
@@ -129,12 +131,12 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Produk</h1>
+            <h1>Pengguna</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.php">Beranda</a></li>
-                    <li class="breadcrumb-item">Produk</li>
-                    <li class="breadcrumb-item active">Edit</li>
+                    <li class="breadcrumb-item">Pengguna</li>
+                    <li class="breadcrumb-item active">Tambah</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -144,50 +146,36 @@
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
-                            <form class="row g-3 mt-2" method="post" enctype="multipart/form-data">
-                                <input type="hidden" name="gambar_lama" value="<?php echo $data['gambar']; ?>">
+                            <form class="row g-3 mt-2" method="post">
+                                <!-- Username -->
                                 <div class="col-12">
-                                    <label for="nm_produk" class="form-label">Nama Produk</label>
-                                    <input type="text" class="form-control" id="nm_produk" name="nm_produk" value="<?php echo $data['nm_produk']; ?>" required>
+                                    <label for="username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan Username" maxlength="100" required>
                                 </div>
+
+                                <!-- Password -->
                                 <div class="col-12">
-                                    <label for="harga" class="form-label">Harga</label>
-                                    <input type="number" class="form-control" id="harga" name="harga" value="<?php echo $data['harga']; ?>" required>
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan Password" required>
                                 </div>
+
+                                <!-- Status -->
                                 <div class="col-12">
-                                    <label for="stok" class="form-label">Stok</label>
-                                    <input type="number" class="form-control" id="stok" name="stok" value="<?php echo $data['stok']; ?>" required>
-                                </div>
-                                <div class="col-12">
-                                    <label for="desk" class="form-label">Deskripsi</label>
-                                    <textarea class="form-control" id="desk" name="desk" required><?php echo $data['desk']; ?></textarea>
-                                </div>
-                                <div class="col-12">
-                                    <label for="id_ktg" class="form-label">Kategori</label>
-                                    <select class="form-control" id="id_ktg" name="id_ktg" required>
-                                        <option value="">-- Pilih Kategori --</option>
-                                        <?php
-                                        $query_kategori = mysqli_query($koneksi, "SELECT * FROM tb_kategori");
-                                        while ($kategori = mysqli_fetch_array($query_kategori)) {
-                                            $selected = ($kategori['id_ktg'] == $data['id_ktg']) ? 'selected' : '';
-                                            echo "<option value='{$kategori['id_ktg']}' $selected>{$kategori['nm_ktg']}</option>";
-                                        }
-                                        ?>
+                                    <label for="status" class="form-label">Status</label>
+                                    <select class="form-select" id="status" name="status" required>
+                                        <option value="">Pilih Status</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="customer">Customer</option>
                                     </select>
                                 </div>
-                                <div class="col-12">
-                                    <label for="gambar" class="form-label">Gambar Produk</label>
-                                    <input type="file" class="form-control" id="gambar" name="gambar" accept="image/*">
-                                    <br>
-                                    <?php if ($data['gambar']) { ?>
-                                        <img src="produk_img/<?php echo $data['gambar']; ?>" width="150">
-                                    <?php } ?>
-                                </div>
+
+                                <!-- Tombol -->
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-primary" name="update">Update</button>
-                                    <a href="produk.php" class="btn btn-secondary">Kembali</a>
+                                    <button type="reset" class="btn btn-secondary">Reset</button>
+                                    <button type="submit" class="btn btn-primary" name="simpan">Simpan</button>
                                 </div>
                             </form>
+
                         </div>
                     </div>
                 </div>
