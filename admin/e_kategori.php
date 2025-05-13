@@ -150,21 +150,21 @@ if (isset($_POST['simpan'])) {
       <li class="nav-item">
         <a class="nav-link collapsed" href="produk.php">
         <i class="bi bi-bag"></i>
-          <span>produk</span>
+          <span>Produk</span>
         </a>
       </li><!-- End Produk Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="keranjang.php">
         <i class="bi bi-basket"></i>
-          <span>keranjang</span>
+          <span>Keranjang</span>
         </a>
       </li><!-- End keranjang Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="transaksi.php">
         <i class="bi bi-currency-dollar"></i>
-          <span>transaksi</span>
+          <span>Transaksi</span>
         </a>
       </li><!-- End transaksi Nav -->
 
