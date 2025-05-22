@@ -217,7 +217,7 @@
                                                     <td><?php echo $hasil['nm_produk']; ?></td>
                                                     <td>Rp <?php echo number_format($hasil['harga'], 0,',','.'); ?></td>
                                                     <td><?php echo $hasil['stok']; ?></td>
-                                                    <td><?php echo $hasil['ket']; ?></td>
+                                                    <td><?php echo $hasil['desk']; ?></td>
                                                     <tg><?php echo $hasil['nm_ktg']; ?></td>
                                                     <td>
                                                         <?php if (!empty($hasil['gambar'])) { ?>
