@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -180,143 +183,171 @@
 	                <div class="container">
 	                	<div class="row">
 	                		<div class="col-lg-9">
-	                			<table class="table table-cart table-mobile">
-									<thead>
-										<tr>
-											<th>Product</th>
-											<th>Price</th>
-											<th>Quantity</th>
-											<th>Total</th>
-											<th></th>
-										</tr>
-									</thead>
+                                <?php
+                                include "admin/koneksi.php";
 
-									<tbody>
-										<tr>
-											<td class="product-col">
-												<div class="product">
-													<figure class="product-media">
-														<a href="#">
-															<img src="assets/images/products/table/product-1.jpg" alt="Product image">
-														</a>
-													</figure>
+                                // Pastikan user sudah login
+                                if (!isset($_SESSION['id_user'])) {
+                                    echo "<script>alert('Silahkan login terlebih dahulu.'); window.location.href='user.php';</script>";
+                                    exit;
+                                }
 
-													<h3 class="product-title">
-														<a href="#">Beige knitted elastic runner shoes</a>
+                                $id_user = $_SESSION['id_user'];
+                                $sql = "SELECT p.id_pesanan, p.qty, p.size, p.total, pr.nm_produk, pr.harga, pr.gambar FROM tb_pesanan p JOIN tb_produk pr ON p.id_produk = pr.id_produk WHERE p.id_user = ? ORDER BY p.id_pesanan DESC";
+
+                                $stmt = $koneksi->prepare($sql);
+                                $stmt->bind_param("s", $id_user);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                ?>
+                                <form action="update_cart.php" method="post">                               
+	                			    <table class="table table-cart table-mobile">
+									    <thead>
+										    <tr>
+											    <th>Product</th>
+											    <th>Price</th>
+											    <th>Quantity</th>
+											    <th>Total</th>
+											    <th></th>
+										    </tr>
+									    </thead>
+
+									    <tbody>
+                                            <?php if ($result->num_rows > 0): ?>
+                                                <?php while ($row = $result->fetch_assoc()): ?>
+										        <tr>
+											        <td class="product-col">
+												        <div class="product">
+													        <figure class="product-media">
+														        <a href="#">
+															        <img src="admin/produk_img/<?php echo htmlspecialchars($row['gambar']); ?>" alt="Product image">
+														    </a>
+													    </figure>
+
+													    <h3 class="product-title">
+														    <a href="#"><?php echo htmlspecialchars($row['nm_produk']); ?></a><br><small>Ukuran: <?php echo htmlspecialchars(strtoupper($row['size'])); ?></smal>
 													</h3><!-- End .product-title -->
 												</div><!-- End .product -->
 											</td>
-											<td class="price-col">$84.00</td>
+											<td class="price-col">Rp. <?php echo number_format($row['harga'], 0, ',', '.'); ?></td>
 											<td class="quantity-col">
-                                                <div class="cart-product-quantity">
-                                                    <input type="number" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                                <div class="cart-product-quantity"><input type="hiden" name="id_pesanan[]" value="<?php echo $row['id_pesanan']; ?>">
+                                                    <input type="number" name="qty[]" class="form-control" value="<?php echo $row['qty']; ?>" min="1" max="10" step="1">
                                                 </div><!-- End .cart-product-quantity -->
                                             </td>
-											<td class="total-col">$84.00</td>
-											<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
-										</tr>
-										<tr>
-											<td class="product-col">
-												<div class="product">
-													<figure class="product-media">
-														<a href="#">
-															<img src="assets/images/products/table/product-2.jpg" alt="Product image">
-														</a>
-													</figure>
-
-													<h3 class="product-title">
-														<a href="#">Blue utility pinafore denim dress</a>
-													</h3><!-- End .product-title -->
-												</div><!-- End .product -->
-											</td>
-											<td class="price-col">$76.00</td>
-											<td class="quantity-col">
-                                                <div class="cart-product-quantity">
-                                                    <input type="number" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
-                                                </div><!-- End .cart-product-quantity -->                                 
-                                            </td>
-											<td class="total-col">$76.00</td>
-											<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
-										</tr>
-									</tbody>
-								</table><!-- End .table table-wishlist -->
-
-	                			<div class="cart-bottom">
-			            			<div class="cart-discount">
-			            				<form action="#">
-			            					<div class="input-group">
-				        						<input type="text" class="form-control" required placeholder="coupon code">
-				        						<div class="input-group-append">
-													<button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
-												</div><!-- .End .input-group-append -->
-			        						</div><!-- End .input-group -->
-			            				</form>
-			            			</div><!-- End .cart-discount -->
-
-			            			<a href="#" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
+											<td class="total-col">Rp. <?php echo number_format($row['total'], 0, ',', '.'); ?></td>
+											<td class="remove-col"><button type="button" class="btn-remove" onclick="hapusitem('<?php echo $row ['id_pesanan']; ?>')"><i class="icon-close"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="text-center">keranjang anda kosong.</td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                    <?php
+                    $stmt->close();
+                    ?>										
+	                
+                    <div class="cart-bottom">
+                        <button type="submit" name="update_keranjang" class="btn btn-outline-dark-2"><span>UPDATE KERANJANG</span><i class="icon-refresh"></i></button>			            			
 		            			</div><!-- End .cart-bottom -->
+                            </form>
+                            <script>
+                                function hapusItem(idPesanan) {
+                                    if (confirm("Apakah anda ingin menghapus item ini?")) {
+                                        // Buat form secara dinamis lalu kirimkan
+                                        var form = documen.createElemet("form");
+                                        form.method = "POST":
+                                        form.action = "cart.php";
+
+                                        var input = document.createElement("input");
+                                        input.type = "hidden";
+                                        input.name = "hapus_pesanan";
+                                        form.appendChild(input);
+
+                                        document.body.appendChild(form);
+                                        form.submit();
+                                    }
+                                }
+                            </script>
+                            <?php
+                            // Sertakan file koneksi
+                            include 'admin/koneksi.php';
+
+                            // Periksa apakah tombol hapus diklik
+                            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_pesanan'])) {
+                                $idpesanan = $_POST['hapus_pesanan'];
+
+                                // query untuk menghapus data berdasarkan id_pesanan
+                                $sql = "DELETE FROM tb_pesanan WHERE id_pesanan = ?";
+
+                                // Siapkan statement
+                                $stmt = $koneksi->prepare($sql);
+                                if ($stmt) {
+                                    $stmt->bind_param("s", $idPesanan);
+                                    // "s" menunjukan tipe string
+                                    if ($stmt->execute()) {
+                                        echo "Item berhasil dihapus.";
+                                    } else {
+                                        echo "Gagal menghapus item: " . $stmt->error;
+                                    }
+                                    $stmt->close();
+                                } else {
+                                    echo "Gagal menyiapkan query: " . $koneksi->error;
+                                }
+                            }
+                            ?>
+
 	                		</div><!-- End .col-lg-9 -->
+                            <?php
+                            // Hitung subtotal, diskon, dan total bayar
+                            $sql_total = "SELECT SUM(total) AS subtotal FROM tb_pesanan WHERE id_user = ?";
+                            $stmt_total = $koneksi->prepare($sql_total);
+                            $stmt_total->bind_param("s", $id_user);
+                            $stmt_total->execute();
+                            $result_total = $stmt_total->get_result();
+                            $row_total = $result_total->fetch_assoc();
+                            $subtotal = (int)$row_total['subtotal'];
+
+                            $diskon = 0;
+                            if ($subtotal > 1500000) {
+                                $diskon = 0.08 * $subtotal;
+                            } elseif ($subtotal > 800000) {
+                                $diskon = 0.05 * $subtotal;
+                            }
+
+                            $total_bayar = $subtotal - $diskon;
+
+                            $stmt_total->close();
+                            ?>
 	                		<aside class="col-lg-3">
 	                			<div class="summary summary-cart">
-	                				<h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+	                				<h3 class="summary-title">Total Keranjang</h3><!-- End .summary-title -->
 
 	                				<table class="table table-summary">
 	                					<tbody>
 	                						<tr class="summary-subtotal">
 	                							<td>Subtotal:</td>
-	                							<td>$160.00</td>
+	                							<td>Rp. <?php echo number_format($subtotal,0, ',','.'); ?></td>
 	                						</tr><!-- End .summary-subtotal -->
-	                						<tr class="summary-shipping">
-	                							<td>Shipping:</td>
-	                							<td>&nbsp;</td>
-	                						</tr>
+                                            <tr class="summary-subtotal">
+                                                <td>Diskon:</td>
+                                                <td>Rp. <?php echo number_format($diskon,0, ',','.'); ?></td>
+                                            </tr><!-- End .summary-subtotal -->
 
-	                						<tr class="summary-shipping-row">
-	                							<td>
-													<div class="custom-control custom-radio">
-														<input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="free-shipping">Free Shipping</label>
-													</div><!-- End .custom-control -->
-	                							</td>
-	                							<td>$0.00</td>
-	                						</tr><!-- End .summary-shipping-row -->
-
-	                						<tr class="summary-shipping-row">
-	                							<td>
-	                								<div class="custom-control custom-radio">
-														<input type="radio" id="standart-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="standart-shipping">Standart:</label>
-													</div><!-- End .custom-control -->
-	                							</td>
-	                							<td>$10.00</td>
-	                						</tr><!-- End .summary-shipping-row -->
-
-	                						<tr class="summary-shipping-row">
-	                							<td>
-	                								<div class="custom-control custom-radio">
-														<input type="radio" id="express-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="express-shipping">Express:</label>
-													</div><!-- End .custom-control -->
-	                							</td>
-	                							<td>$20.00</td>
-	                						</tr><!-- End .summary-shipping-row -->
-
-	                						<tr class="summary-shipping-estimate">
-	                							<td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a></td>
-	                							<td>&nbsp;</td>
-	                						</tr><!-- End .summary-shipping-estimate -->
-
-	                						<tr class="summary-total">
-	                							<td>Total:</td>
-	                							<td>$160.00</td>
-	                						</tr><!-- End .summary-total -->
-	                					</tbody>
+                                            <tr class="summary-subtotal">
+                                                <td>Total:</td>
+                                                <td>Rp. <?php echo number_format($total_bayar,0, ',','.'); ?></td>
+                                            </tr><!-- End .summary-subtotal -->
+                                        </tbody>
 	                				</table><!-- End .table table-summary -->
 
-	                				<a href="checkout.html" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
+	                				<a href="checkout.html" class="btn btn-outline-primary-2 btn-order btn-block">PROSES CHECKOUT</a>
 	                			</div><!-- End .summary -->
-
-		            			<a href="category.html" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
 	                		</aside><!-- End .col-lg-3 -->
 	                	</div><!-- End .row -->
 	                </div><!-- End .container -->

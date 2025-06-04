@@ -246,6 +246,7 @@ session_start();
                                             <select name="size" id="size" class="form-control">
                                                 <option value="#" selected="selected">Select a size</option>
                                                 <?php foreach ($sizes as $size) { ?><option value="<?php echo htmlspecialchars(strolower($size)); ?>"><?php echo htmlspecialchars(strtoupper($size)); ?></option><?php } ?>
+                                                <?php } ?>
                                             </select>
                                         </div><!-- End .select-custom -->                                        
                                     </div><!-- End .details-filter-row -->
@@ -297,9 +298,9 @@ session_start();
                                             $stmt->bind_param("ssisis", $new_id, $produk['id_produk'], $qty, $size, $total, $id_user);
 
                                             if ($stmt->execute()) {
-                                                echo "<script>alert('produk berhasil ditambahkan ke keranjang!'); window.location.href='cart.php';</script>"
+                                                echo "<script>alert('produk berhasil ditambahkan ke keranjang!'); window.location.href='cart.php';</script>";
                                             } else {
-                                                echo "<p>Gagal menambahkan ke keranjang: "
+                                                echo "<p>Gagal menambahkan ke keranjang: " .
                                                 htmlspecialchars($stmt->error) . "</p>";
                                             }
                                         }
@@ -386,56 +387,46 @@ session_start();
                 "items":4,
                 "nav": true,
                 "dots": false
-                                }
-                            }
-                        }'>
+            }
+        }
+    }'>
+
+                <?php
+                // Perulangan untuk menampilkan produk terkait
+                if ($result_relate->num_rows > 0) {
+                    while ($relate = $result_related->fetch_assoc()) {
+                ?>
                         <div class="product product-7 text-center">
                             <figure class="product-media">
-                                <span class="product-label label-new">New</span>
-                                <a href="product.html">
-                                    <img src="assets/images/products/product-4.jpg" alt="Product image" class="product-image">
+                                <a href="detail_produk.php?id_produk=<?php echo $related['id_produk']; ?>">
+                                    <img src="admin/produk_img/<?php echo $related['gambar']; ?>" alt="<?php echo htmlspecialchars($related['nm_produk']); ?>" class="produk-image">
                                 </a>
-
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                    <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
-                                </div><!-- End .product-action-vertical -->
-
                                 <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                    <a href="cart.php?action=add&id_produk=<?php echo $related['id_produk']; ?>" class="btn-product btn-cart"><span>Keranjang</span></a>
                                 </div><!-- End .product-action -->
                             </figure><!-- End .product-media -->
 
                             <div class="product-body">
                                 <div class="product-cat">
-                                    <a href="#">Women</a>
+                                    <a href="#">Kategori</a>
                                 </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">Brown paperbag waist <br>pencil skirt</a></h3><!-- End .product-title -->
+                                <h3 class="product-title">
+                                    <a href="detail_produk.php?id_produk=<?php echo $related
+                                    ['id_produk']; ?>">
+                                        <?php echo number_format($related['nm_produk']); ?>
+                                </a>                                        
+                            </h3><!-- End .product-title -->
                                 <div class="product-price">
-                                    $60.00
+                                    Rp. <?php echo number_format($related['harga'], 0, ',', '.'); ?>
                                 </div><!-- End .product-price -->
-                                <div class="ratings-container">
-                                    <div class="ratings">
-                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                                    </div><!-- End .ratings -->
-                                    <span class="ratings-text">( 2 Reviews )</span>
-                                </div><!-- End .rating-container -->
-
-                                <div class="product-nav product-nav-thumbs">
-                                    <a href="#" class="active">
-                                        <img src="assets/images/products/product-4-thumb.jpg" alt="product desc">
-                                    </a>
-                                    <a href="#">
-                                        <img src="assets/images/products/product-4-2-thumb.jpg" alt="product desc">
-                                    </a>
-
-                                    <a href="#">
-                                        <img src="assets/images/products/product-4-3-thumb.jpg" alt="product desc">
-                                    </a>
-                                </div><!-- End .product-nav -->
                             </div><!-- End .product-body -->
                         </div><!-- End .product -->
+                <?php
+                    }
+                } else {
+                    echo "<p>produk terkait tidak tersedia.</p>";
+                }
+                ?>
 
                         <div class="product product-7 text-center">
                             <figure class="product-media">

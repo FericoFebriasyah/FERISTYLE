@@ -236,7 +236,7 @@
                           <a href="e_kategori.php?id=<?php
                           echo $hasil['id_ktg']; ?>"
                           class="btn btn-warning">
-                              <i class="bi bi-pencil-squere"></i>
+                          <i class="bi bi-pencil-squere"></i>
                       </a>
                       <a href="h_kategori.php?id=<?php
                       echo $hasil['id_ktg']; ?>"
